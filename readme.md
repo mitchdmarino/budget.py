@@ -1,0 +1,1 @@
+This is my automatic budget generator. Just add new CC and pay statements to get an acitve view of my budget 
