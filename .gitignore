@@ -1,8 +1,11 @@
-cc_statements/*
+cc_statements_USBANK/*
+cc_statements_CAPITALONE/*
 venv/*
 organized_cc_statements/*
 paystubs/*
 organized_pay_stubs/*
 myenv/*
 Budget.xlsx
+~$Budget.xlsx
+
 

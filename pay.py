@@ -7,8 +7,6 @@ from datetime import datetime
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.table import Table, TableStyleInfo
 
-#import datetime
-
 
 def extract_tables_from_pdf(pdf_file, page_number=0):
     with pdfplumber.open(pdf_file) as pdf:
