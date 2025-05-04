@@ -110,7 +110,7 @@ all_credits_df.to_csv('./organized_cc_statements/credits.csv', index=False)
 
 print("Charges and credits have been successfully combined and saved to CSV files.")
 
-
+'''
 ####################################################################################
 # Now we need to add the data to excel
 
@@ -215,3 +215,4 @@ def format_dates():
     wb.save(excel_file)
 
 format_dates()
+'''
