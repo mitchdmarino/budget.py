@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 8000
 app.use(cors())
 app.use(express.json()) // json req.bodies
 
+app.use(express.urlencoded({ extended: true }));
+
 // app.use(( req, res, next ) => {
 //     console.log('hello i am a middleware')
 //     res.locals.myData = 'I am data that is passed out of the middleware'
@@ -32,6 +34,7 @@ app.get('/', myMiddleware, (req, res) => {
 })
 
 app.use('/api-v1/users', require('./controllers/api-v1/users'))
+app.use('/api-v1/charges', require('./controllers/api-v1/charges'));
 
 
 // listen on a port 

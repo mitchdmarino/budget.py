@@ -10,6 +10,7 @@ export default function Navbar( {currentUser, handleLogout} ) {
             <Link to='/profile'>
                 Profile
             </Link>
+            <Link to='/txns'>My Transactions</Link>
         </>
     )
 

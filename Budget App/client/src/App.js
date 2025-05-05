@@ -14,6 +14,7 @@ import Profile from './components/pages/Profile'
 import Navbar from './components/Navbar'
 import jwt_decode from 'jwt-decode'
 import './App.css';
+import Transactions from './components/pages/Transactions'
 
 function App() {
   // the currently logged in user will be stored in state 
@@ -58,6 +59,9 @@ function App() {
           <Route 
             path='/login' 
             element={<Login currentUser={currentUser} setCurrentUser={setCurrentUser}/>}/>
+          <Route 
+            path='/txns' 
+            element={<Transactions currentUser={currentUser} setCurrentUser={setCurrentUser}/>}/>
           {/* TODO: conditionally render auth locked routes */}
           <Route 
             path='/profile' 
