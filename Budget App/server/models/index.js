@@ -19,5 +19,6 @@ db.on('error', err => {
 module.exports = {
     // export db models 
     User: require('./user'), 
-    Transaction: require('./transactions')
+    Transaction: require('./transactions'), 
+    Category: require('./categories')
 }

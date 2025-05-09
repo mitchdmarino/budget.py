@@ -12,6 +12,14 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String, 
         required: true
+    }, 
+    transactions: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Transactions'
+    }, 
+    categories: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Categories'
     }
 }, {
     timestamps: true
