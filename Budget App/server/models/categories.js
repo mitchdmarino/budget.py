@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const CategoriesSchema = new mongoose.Schema({
     name: {
-        tyep: String, 
+        type: String, 
         required: true,
     }, owner: {
         type: mongoose.Schema.Types.ObjectId,
