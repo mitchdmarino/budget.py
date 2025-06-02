@@ -13,11 +13,11 @@ router.get('/', authLockedRoute, async (req, res) => {
     try {
         console.log("getting txns")
         const user = res.locals.user;
-        let transactions = await db.Transaction.find({owner: user.id}).populate(category);
+        let transactions = await db.Transaction.find({owner: user.id});
         res.json({
             transactions: transactions
         })
-    } catch (error) {
+    } catch (err) {
         res.status(500).json(err)
     }
 })
@@ -27,9 +27,9 @@ router.post('/', authLockedRoute, async (req, res) => {
     try {
         console.log("adding a custom transaction");
         let newTransaction = req.body.transaction;
-        newTransaction = await db.Transaction.create(newTransaction)
+        newTransaction = await db.Transaction.create(newTransaction);
         newTransaction.save();
-    } catch (error) {
+    } catch (err) {
         res.status(500).json(err)
     }
 })
