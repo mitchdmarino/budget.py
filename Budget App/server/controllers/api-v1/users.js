@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
             id: newUser.id
         }
         // sign the token and send it back 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 24 }) // expires in one day
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" }) // expires in one day
         res.json({ token })
     } catch (err) {
         console.warn(err)
@@ -47,7 +47,7 @@ router.post('/register', async (req, res) => {
             // handle all other errors
             res.status(500).json({ msg: 'server error 500 😡' })
         }
-        res.status(500).json(err)
+        
 
     }
 })
@@ -81,19 +81,12 @@ router.post('/login', async (req, res) => {
             id: findUser.id
         } 
         // sign the jwt and send it back 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 24 }) // expires in one day
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" }) // expires in one day
         res.json({ token })
        
     } catch (err) {
-        console.log(err)
+        res.status(500).json(err)
     }
-})
-
-// GET /auth-locked -- checks users credentials and only sends back privilaged information if user is logged in properly
-router.get('/auth-locked', authLockedRoute, (req, res) => {
-    console.log('the current user is ', res.locals.user)
-    res.json({ msg: 'welcome to the secret auth-locked route 🕵🏻‍♂️' })
-    
 })
 
 module.exports = router 

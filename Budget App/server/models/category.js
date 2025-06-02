@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const CategoriesSchema = new mongoose.Schema({
+const CategorySchema = new mongoose.Schema({
     name: {
         type: String, 
         required: true,
@@ -10,10 +10,10 @@ const CategoriesSchema = new mongoose.Schema({
     }, 
     transactions: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: "Transactions"
+        ref: "Transaction"
     }
 },{
     timestamps: true
 })
 
-module.exports = mongoose.model('Categories', CategoriesSchema)
+module.exports = mongoose.model('Category', CategorySchema)

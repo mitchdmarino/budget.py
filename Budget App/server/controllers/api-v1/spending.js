@@ -6,23 +6,67 @@ const multer = require('multer');
 const upload = multer({ dest: './uploads/' }); // Save files to 'uploads/' directory
 const csv = require('csv-parser');
 const fs = require('fs');
+const category = require('../../models/category');
 
-
-router.get('/txns', authLockedRoute, async (req, res) => {
+// show all spending transactions
+router.get('/', authLockedRoute, async (req, res) => {
     try {
         console.log("getting txns")
-        var user = res.locals.user;
-        var transactions = await db.Transaction.find({owner: user.id});
-        console.log(transactions)
+        const user = res.locals.user;
+        let transactions = await db.Transaction.find({owner: user.id}).populate(category);
         res.json({
-            txns: transactions
+            transactions: transactions
         })
     } catch (error) {
-        
+        res.status(500).json(err)
     }
 })
 
-router.post('/addCSV', authLockedRoute, upload.single('chargesCSV'), async (req, res) => {
+// add a single transaction
+router.post('/', authLockedRoute, async (req, res) => {
+    try {
+        console.log("adding a custom transaction");
+        let newTransaction = req.body.transaction;
+        newTransaction = await db.Transaction.create(newTransaction)
+        newTransaction.save();
+    } catch (error) {
+        res.status(500).json(err)
+    }
+})
+
+// Categorize a transaction
+router.post('/category', authLockedRoute, async (req, res) => {
+    try {
+        let category = req.body.category
+        let transaction = req.body.transaction;
+        transaction = await db.Transaction.findByIdAndUpdate(transaction._id, {
+            category: category._id
+        })
+        await transaction.save();
+        console.log("post /spending/category: updated the transaction");
+        category = await db.Category.findByIdAndUpdate(category._id, {
+                $push: {transactions: transaction._id}
+        })
+        await category.save();
+        console.log("post /spending/category: added the transaction to the category");
+        res.json({
+            transaction: transaction, 
+            category: category
+        });
+    } catch (err) {
+        console.warn(err)
+        // handle validation errors
+        if (err.name === 'ValidationError') {
+            res.status(400).json({ msg: err.message })
+        } else {
+            // handle all other errors
+            res.status(500).json({ msg: 'server error 500 😡' })
+        }
+        res.status(500).json(err)
+    }
+})
+
+router.post('/CSV', authLockedRoute, upload.single('chargesCSV'), async (req, res) => {
     try {
         var user = res.locals.user;
         if (!user) {
@@ -49,8 +93,6 @@ router.post('/addCSV', authLockedRoute, upload.single('chargesCSV'), async (req,
           })
         }
         await parseCSV(req.file.path);
-        console.log("Test")
-        console.log(results)
         for (const result of results) {
             console.log(result['Post Date'])
             let newTxn = new db.Transaction({
@@ -63,27 +105,6 @@ router.post('/addCSV', authLockedRoute, upload.single('chargesCSV'), async (req,
             await (newTxn.save());
             console.log("new transaction saved")
         };
-            // [
-            //   { NAME: 'Daffy Duck', AGE: '24' },
-            //   { NAME: 'Bugs Bunny', AGE: '22' }
-            // ]        
-        /*
-        const newUser = new db.User({
-            name: req.body.name,
-            email: req.body.email,
-            password: hashedPassword
-        })
-        await newUser.save()
-        // sign the user in 
-        // create the jwt payload
-        const payload = {
-            name: newUser.name,
-            email: newUser.email,
-            id: newUser.id
-        }
-        // sign the token and send it back 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 60 * 24 }) // expires in one day
-        res.json({ token }) */
     } catch (err) {
         console.warn(err)
         // handle validation errors
@@ -97,4 +118,5 @@ router.post('/addCSV', authLockedRoute, upload.single('chargesCSV'), async (req,
 
     }
 })
+
 module.exports = router 

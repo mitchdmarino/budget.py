@@ -21,7 +21,7 @@ const TransactionsSchema = new mongoose.Schema({
         ref: 'User'
     }, category: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Categories'
+        ref: 'Category'
     }
 }, {
     timestamps: true
