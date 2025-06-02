@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import { Navigate } from 'react-router-dom'
+import { login } from '../../api/api'
 
 export default function Login({ currentUser, setCurrentUser }) {
     // state for the controlled form 
@@ -13,19 +13,18 @@ export default function Login({ currentUser, setCurrentUser }) {
         e.preventDefault()
         try {
             // post form data to the backend
-            const reqBody = {
+            const loginData = {
                 email, 
                 password
             }
-            const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api-v1/users/login`, reqBody)
-
+            const response = await login(loginData)
             // save the token in localstorage
             const { token } = response.data
             localStorage.setItem('jwt', token)
             // decode the token 
             const decoded = jwt_decode(token)
             // set the user in App's state to be the decoded token 
-           setCurrentUser(decoded)
+            setCurrentUser(decoded)
         } catch (err) {
             console.warn(err)
             if (err.response) {

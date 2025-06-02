@@ -11,10 +11,10 @@ import Welcome from './components/pages/Welcome'
 import Register from './components/pages/Register'
 import Login from './components/pages/Login'
 import Profile from './components/pages/Profile'
-import Navbar from './components/Navbar'
+import Navbar from './components/navigation/Navbar'
 import jwt_decode from 'jwt-decode'
 import './App.css';
-import Transactions from './components/pages/Transactions'
+import Transactions from './components/transactions/Transactions'
 
 function App() {
   // the currently logged in user will be stored in state 

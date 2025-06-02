@@ -1,14 +1,14 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
-export default function Transactions({currentUser, handleLogout}) {
+export default function CategorySelect({currentUser, setCategory}) {
     // state for the secret message (aka user privileged data )
-    const [txns, setTxns] = useState([])
-    
+    const [categories, setCategories] = useState([])
+
     // useEffect for getting the user data and checking auth 
     useEffect(() => {
-        console.log('test')
-        const getTxns = async () => {
+        
+        const getCategories = async () => {
             try {
                 // get the token from local storage 
                 const token = localStorage.getItem('jwt')
@@ -19,12 +19,12 @@ export default function Transactions({currentUser, handleLogout}) {
                     }
                 }
                 // hit the auth locked endpoint
-                const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api-v1/charges/txns`, options)
+                const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api-v1/categories`, options)
                 // set the secret user message in state 
-                let myTransactions = response.data.txns;
+                let myCategories = response.data.categories;
                 console.log('test')
-                console.log(myTransactions);
-                setTxns(myTransactions)
+                console.log(myCategories);
+                setCategories(myCategories);
     
             } catch (err) {
                 // if the error is 401, the auth failed
@@ -36,21 +36,25 @@ export default function Transactions({currentUser, handleLogout}) {
                 }
             }
         }
-        getTxns()
+        getCategories()
     }, [])
-    
+
+    function showCategories() {
+        // get the categories from state 
+        categories.map((cat) => {
+            <option value={cat} key={cat.id}>{cat}</option>
+        })
+    }
+    const handleSelection = (selectedOption, actionMeta) => {
+        setCategory(selectedOption);
+        console.log(`Action: ${actionMeta.action}`);
+      };
     
     return (
 
         <div>
-            <h1>Hello</h1>
-            
-            <p>Email:</p>
-
-            
-
-
+            <label for="cats">Choose a category:</label>
+            <select onChange={handleSelection}>{showCategories}</select>
         </div>
     )
 }
-

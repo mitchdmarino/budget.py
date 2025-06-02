@@ -1,0 +1,49 @@
+.transaction-container {
+    border: 2px solid black;
+    padding: 10px;
+    margin: 10px auto;
+    background-color: antiquewhite;
+    border-radius: 10px;
+    max-width: 500px;
+}
+
+.transaction-list-header {
+    display: flex;
+    border: 2px solid black;
+    padding: 10px;
+}
+
+.transaction-list-component {
+    display: flex;
+    border: 2px solid black;
+    padding: 10px;
+}
+
+.transaction-list-component:nth-child(odd) { background: rgb(238, 238, 238); }
+.transaction-list-component:nth-child(even) { background: rgb(147, 145, 145); }
+
+.transaction-list {
+    margin: 0 10px;
+}
+
+.transaction-date {
+    width: 150px;
+}
+
+.transaction-description {
+    width: 400px;
+}
+
+.transaction-amount {
+    width: 150px;
+}
+
+.transaction-category {
+    width: 150px;
+}
+
+.page-selection {
+    margin: 10px 10px 0px 10px;
+    display: flex;
+    justify-content: space-between;
+}
