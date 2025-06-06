@@ -47,3 +47,18 @@
     display: flex;
     justify-content: space-between;
 }
+
+.transaction-date-selection {
+    display: flex;
+    justify-content: center;
+}
+.transaction-date-selection > button {
+    background-color: transparent;
+    border: none;
+    font-weight:bold;
+    font-size: larger
+}
+
+.transaction-date-selection > h1 {
+    width: 270px;
+}
