@@ -27,7 +27,11 @@ export async function categorizeTransaction(localStorage, transaction, category)
         transaction: transaction, 
         category: category
     }
+    console.log("RUNNING THE API")
+    console.log(transaction)
+    console.log(category)
     const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api-v1/spending/category`, reqData, options);
+    console.log(response)
     return response;
 }
 

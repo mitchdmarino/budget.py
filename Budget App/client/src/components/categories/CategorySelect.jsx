@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
-export default function CategorySelect({currentUser, setCategory}) {
+export default function CategorySelect({category, setNewCategory}) {
     // state for the secret message (aka user privileged data )
     const [categories, setCategories] = useState([])
 
@@ -22,7 +22,6 @@ export default function CategorySelect({currentUser, setCategory}) {
                 const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api-v1/categories`, options)
                 // set the secret user message in state 
                 let myCategories = response.data.categories;
-                console.log('test')
                 console.log(myCategories);
                 setCategories(myCategories);
     
@@ -39,22 +38,24 @@ export default function CategorySelect({currentUser, setCategory}) {
         getCategories()
     }, [])
 
-    function showCategories() {
-        // get the categories from state 
-        categories.map((cat) => {
-            <option value={cat} key={cat.id}>{cat}</option>
-        })
-    }
-    const handleSelection = (selectedOption, actionMeta) => {
-        setCategory(selectedOption);
-        console.log(`Action: ${actionMeta.action}`);
+    let showCategories = categories.map(cat => {
+        return (
+            <option value={cat._id} key={cat.id}>{cat.name}</option>
+        )
+    })
+
+    const handleSelection = async (selectedOption, actionMeta) => {
+        await setNewCategory(selectedOption.target.value);
+        //console.log(`Action: ${actionMeta.action}`);
       };
     
     return (
 
         <div>
-            <label for="cats">Choose a category:</label>
-            <select onChange={handleSelection}>{showCategories}</select>
+            <label htmlFor="cats">Choose a category:</label>
+            <select onChange={handleSelection}>
+                {showCategories}
+            </select>
         </div>
     )
 }
