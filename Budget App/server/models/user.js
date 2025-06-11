@@ -17,10 +17,10 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Transactions'
     }, 
-    categories: {
+    categories: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Categories'
-    }
+    }]
 }, {
     timestamps: true
 })

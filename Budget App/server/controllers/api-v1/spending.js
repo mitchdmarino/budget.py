@@ -13,7 +13,7 @@ router.get('/', authLockedRoute, async (req, res) => {
     try {
         console.log("getting txns")
         const user = res.locals.user;
-        let transactions = await db.Transaction.find({owner: user.id});
+        let transactions = await db.Transaction.find({owner: user.id}).populate('category');
         res.json({
             transactions: transactions
         })
@@ -37,16 +37,20 @@ router.post('/', authLockedRoute, async (req, res) => {
 // Categorize a transaction
 router.post('/category', authLockedRoute, async (req, res) => {
     try {
+        //console.log("SEttiNG CAT" + category)
         let category = req.body.category
         let transaction = req.body.transaction;
         transaction = await db.Transaction.findByIdAndUpdate(transaction._id, {
-            category: category._id
+            category: category
         })
         await transaction.save();
         console.log("post /spending/category: updated the transaction");
-        category = await db.Category.findByIdAndUpdate(category._id, {
+        category = await db.Category.findByIdAndUpdate(category, {
                 $push: {transactions: transaction._id}
         })
+        if (!category.color) {
+            category.color = "blue"
+        }
         await category.save();
         console.log("post /spending/category: added the transaction to the category");
         res.json({
