@@ -1,0 +1,51 @@
+.fade-in-first {
+    opacity: 0; 
+    animation-name: fadeInOpacity; 
+    animation-iteration-count: 1; 
+    animation-timing-function: ease-in forwards;
+    animation-fill-mode: forwards;
+    animation-duration: 2s;
+}
+
+.fade-in-second {
+    opacity: 0; 
+    animation-name: fadeInOpacity; 
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in; 
+    animation-fill-mode: forwards;
+    animation-delay: 2s;
+    animation-duration: 2s; 
+}
+
+@keyframes fadeInOpacity {
+    from {
+        transform: translateY(-100%); 
+    }
+    to {
+        transform: translateY(0%); 
+        opacity: 1; 
+    }
+}
+
+* {
+    color: #03120E; 
+    text-align: left;
+}
+
+.welcome-header {
+    padding: 10px 0 40px 20%; 
+    background-color:#26413C;
+    font-size: 2rem; 
+}
+
+h1, span {
+    color: #8FE388; 
+}
+
+h3 {
+    color: white; 
+}
+.divider {
+    background-color: white;
+    height: 1px;
+}

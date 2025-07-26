@@ -1,31 +1,33 @@
+import "./Navbar.css"
 import { Link } from 'react-router-dom'
 
 export default function Navbar( {currentUser, handleLogout} ) {
     const loggedIn = (
-        <>
+        <div className="logged-in">
             {/* if the user is logged out .. */}
-            <Link to='/'>
-                <span onClick={handleLogout}>Logout</span>
-            </Link>{' | '}
+            
             <Link to='/profile'>
                 Profile
             </Link>
             <Link to='/txns'>My Transactions</Link>
-        </>
+            <Link to='/categories'>My Categories</Link>
+            <Link to='/'>
+                <span onClick={handleLogout}>Logout</span>
+            </Link>
+        </div>
     )
 
     const loggedOut = (
-        <>
+        <div className="logged-out">
             {/* if the user is not logged in  */}
-            <Link to='/register'>Register</Link>{' | '}
-            <Link to='/login'>Login</Link>
-        </>
+            <Link to='/login'>Sign in</Link>
+        </div>
     )
     return (
         <nav>
-            {/* user always sees this section */}
-            <Link to='/'>
-                <p>User App</p>
+            <Link className="branding" to="/">
+                <img src="/Surplus_Logo.png" />
+                <span>Surplus</span>
             </Link>
             {
                 currentUser ? 

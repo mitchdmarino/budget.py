@@ -1,0 +1,39 @@
+nav {
+    background-color: #26413C;
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    padding: 10px;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+.logged-out, .logged-in {
+    width: 100%;
+    display: flex; 
+    align-items: flex-end;
+    justify-content: end;
+    height: 100%; 
+}
+
+
+.logged-out a {
+    display: block;
+}
+
+.branding img {
+    width: 40px;
+    height: 40px;
+}
+.branding {
+    display: flex; 
+    align-items: center; 
+}
+.branding * {
+    margin: 5px;
+}
