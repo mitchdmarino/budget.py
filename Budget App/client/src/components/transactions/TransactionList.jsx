@@ -1,6 +1,7 @@
 import "./Transactions.css"
 import TransactionListComponent from "./TransactionListComponent";
 import { useEffect, useState } from "react";
+import PopUp from "./PopUp";
 
 // set the initial month and year filter
 const today = new Date();
@@ -14,6 +15,7 @@ export default function TransactionList({transactions, setTxns}) {
     const [page, setPage] = useState(1);
     const [currentTransactions, setCurrentTransactions] = useState([]);
     const [dateFilter, setDateFilter] = useState(dateRef);
+    const [popUp, setPopUp] = useState(false); // new txn popup 
 
     useEffect(() => {
         // filter transactions for the selected date (using the month and year)
@@ -76,6 +78,15 @@ export default function TransactionList({transactions, setTxns}) {
     initialDate += dateFilter.getMonth() + 1; 
 
     if (!transactions || transactions.length === 0) return null;
+
+    // adding a new txn 
+    const handleNewTxnClose = () => {
+        setPopUp(false); 
+    }
+    const handleNewTxnOpen = () => {
+        setPopUp(true)
+    }
+
     return (
         <div className="transaction-list-container">
             <div className="transaction-date-selection">
@@ -83,6 +94,10 @@ export default function TransactionList({transactions, setTxns}) {
                 <input className="month-selector" type="month" value={initialDate} onChange={handleSetDate}/> 
                 <button onClick={handleNextDate}>{'>'}</button>
                 
+            </div>
+            <div className="new-transaction-container" >
+                <button onClick={handleNewTxnOpen}>Add custom transaction</button>
+                <PopUp open={popUp} onClose={handleNewTxnClose} txn={null} date={null} setTxns ={setTxns} setPopUp={setPopUp}/> 
             </div>
             <div className="transaction-list">
                 <div className="transaction-list-header">

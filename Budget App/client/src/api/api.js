@@ -21,6 +21,16 @@ export async function getTransactions(localStorage) {
     return response;
 }
 
+// add a single transaction 
+export async function createTransaction(localStorage, transaction) {
+    const reqData = {
+        transaction: transaction, 
+    }
+    const options = setAuthTokenHeader(localStorage); 
+    const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api-v1/spending`, reqData, options);
+    return response; 
+}
+
 // update a transaction 
 export async function updateTransaction(localStorage, transaction) {
     const options = setAuthTokenHeader(localStorage); 

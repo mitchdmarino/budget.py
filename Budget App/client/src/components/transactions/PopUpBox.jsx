@@ -1,68 +1,94 @@
 import { useState } from "react";
 import Box from "@mui/material/Box"
-import { updateTransaction } from "../../api/api";
+import { createTransaction, updateTransaction } from "../../api/api";
+import { useEffect } from "react";
 
 export default function PopUpBox ({sx, txn, date, setTxns, setPopUp}) {
-    const [editMode, setEditMode] =useState (false)
-    var tempDate = new Date(date);
-    tempDate=tempDate.toISOString().substring(0,10)
-    //tempDate = tempDate.substring(0,10);
-    const [transactionUpdate, setTransactionUpdate] = useState({
-        _id: txn._id, 
-        postDate: tempDate, 
-        description: txn.description, 
-        amount: txn.amount, 
-        category: txn.category
-    })
+    const [editMode, setEditMode] =useState (true); 
+    const [existingTxn, setExistingTxn] = useState(false); // determines whether we are creating or reading/updating 
+    const [transactionUpdate, setTransactionUpdate] = useState({}); // for the user post/put 
+
+    useEffect(() => {
+        var tempDate; 
+        // if there is an existing txn, no need to do anything special 
+        if (txn) {
+            setExistingTxn(true); 
+            setTransactionUpdate({
+                ...txn, 
+                txnDate: new Date(date).toISOString().substring(0,10), 
+            })
+            setEditMode(false); 
+        } else {
+            // then we are using this to create a new transaction 
+            setExistingTxn(false); 
+            setEditMode(true); 
+            setTransactionUpdate({
+                txnDate: new Date().toISOString().substring(0,10), 
+                description: "", 
+                amount: 0, 
+                category: null, 
+            })
+        }
+
+    }, [])
+
+    
 
     const handleDateChange = (e) => {
         setTransactionUpdate({
-            _id: txn._id, 
-            postDate: e.target.value, 
-            description: transactionUpdate.description, 
-            amount: transactionUpdate.amount, 
-            category: transactionUpdate.category
+            ...transactionUpdate, 
+            txnDate: e.target.value, 
         })
     }
     const handleDescriptionChange = (e) => {
         setTransactionUpdate({
-            _id: txn._id, 
-            postDate: transactionUpdate.postDate, 
+            ...transactionUpdate, 
             description: e.target.value, 
-            amount: transactionUpdate.amount, 
-            category: transactionUpdate.category
         })
     }
     const handleAmountChange = (e) => {
         setTransactionUpdate({
-            _id: txn._id, 
-            postDate: transactionUpdate.postDate, 
-            description: transactionUpdate.description,  
+            ...transactionUpdate, 
             amount: e.target.value, 
-            category: transactionUpdate.category
         })
     }
     const handleCategoryChange = () => {
 
     }
     const handleSubmit = async () => {
-        const getUpdatedTxns = async () => {
-            let response = await updateTransaction(localStorage, transactionUpdate); 
-            console.log(response)
-            setTxns(response.data.transactions);  
+        if (existingTxn) {
+            const getUpdatedTxns = async () => {
+                let response = await updateTransaction(localStorage, transactionUpdate); 
+                console.log(response)
+                setTxns(response.data.transactions);  
+            }
+            await getUpdatedTxns(); 
+        } else {
+            // create the new txn; 
+            const createTxn = async () => {
+                let response = await createTransaction(localStorage, transactionUpdate); 
+                console.log(response); 
+                setTxns(response.data.transactions); 
+            }
+            await createTxn(); 
         }
-        await getUpdatedTxns(); 
         setEditMode(false); 
         setPopUp(false); 
     }
 
     const handleEditButtonClick = () => {
-        setEditMode(!editMode); 
+        setEditMode(!editMode);
+        if (!existingTxn) {
+            // exit the popup 
+            setPopUp(false); 
+        } else {
+           
+        }
     }
     return (
         editMode ? (
             <Box sx={sx} className="edit-mode">
-                <input className="transaction-date transaction-detail" type="date" value={transactionUpdate.postDate} onChange={handleDateChange}/>
+                <input className="transaction-date transaction-detail" type="date" value={transactionUpdate.txnDate} onChange={handleDateChange}/>
                 <input className="transaction-description transaction-detail" type="text" value={transactionUpdate.description} onChange={handleDescriptionChange} /> 
                 <input className="transaction-amount transaction-detail" type="number" value={transactionUpdate.amount} onChange={handleAmountChange} /> 
                 <button onClick={handleEditButtonClick}>BACK</button>
