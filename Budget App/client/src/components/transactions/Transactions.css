@@ -14,13 +14,20 @@
 }
 
 .transaction-list-component {
-    display: flex;
     border: 2px solid black;
     padding: 10px;
 }
 
+.transaction-preview {
+    display: flex; 
+}
+
+.transaction-list-component:hover {
+    cursor: pointer; 
+}
+
 .transaction-list-component:nth-child(odd) { background: rgb(238, 238, 238); }
-.transaction-list-component:nth-child(even) { background: rgb(147, 145, 145); }
+.transaction-list-component:nth-child(even) { background: #26413c8e }
 
 .transaction-list {
     margin: 0 10px;
@@ -59,6 +66,17 @@
     font-size: larger
 }
 
-.transaction-date-selection > h1 {
-    width: 270px;
+.transaction-date-selection > button {
+    color: #F9AB55
+}
+
+.month-selector {
+    padding: 20px;
+    font-size: 1.3rem; 
+    border: 2px solid #F9AB55; 
+    margin: 2px; 
+}
+
+.page-selection, .transaction-date-selection, .month-selector {
+    color: #F9AB55; 
 }

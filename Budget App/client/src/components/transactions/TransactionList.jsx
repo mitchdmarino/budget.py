@@ -1,3 +1,4 @@
+import "./Transactions.css"
 import TransactionListComponent from "./TransactionListComponent";
 import { useEffect, useState } from "react";
 
@@ -79,7 +80,7 @@ export default function TransactionList({transactions}) {
         <div className="transaction-list-container">
             <div className="transaction-date-selection">
                 <button onClick={handlePrevDate}>{'<'}</button>
-                <input type="month" value={initialDate} onChange={handleSetDate}/> 
+                <input className="month-selector" type="month" value={initialDate} onChange={handleSetDate}/> 
                 <button onClick={handleNextDate}>{'>'}</button>
                 
             </div>
