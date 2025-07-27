@@ -27,9 +27,19 @@ router.post('/', authLockedRoute, async (req, res) => {
     try {
         console.log("adding a custom transaction");
         let newTransaction = req.body.transaction;
+        console.log(newTransaction); 
+        newTransaction.owner = res.locals.user.id; 
         newTransaction = await db.Transaction.create(newTransaction);
         newTransaction.save();
+        console.log("new txn: " + newTransaction); 
+        let transactions = await db.Transaction.find({owner: res.locals.user.id}).populate('category');
+        console.log(transactions)
+        res.json({
+            transactions: transactions, 
+            newTransaction: newTransaction
+        })
     } catch (err) {
+        console.log(err); 
         res.status(500).json(err)
     }
 })
