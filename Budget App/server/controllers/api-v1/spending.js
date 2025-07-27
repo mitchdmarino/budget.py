@@ -11,7 +11,7 @@ const category = require('../../models/category');
 // show all spending transactions
 router.get('/', authLockedRoute, async (req, res) => {
     try {
-        console.log("getting txns")
+        console.log("getting txns"); 
         const user = res.locals.user;
         let transactions = await db.Transaction.find({owner: user.id}).populate('category');
         res.json({
@@ -30,6 +30,35 @@ router.post('/', authLockedRoute, async (req, res) => {
         newTransaction = await db.Transaction.create(newTransaction);
         newTransaction.save();
     } catch (err) {
+        res.status(500).json(err)
+    }
+})
+
+// update a transaction 
+router.put('/', authLockedRoute, async (req, res) => {
+    try {
+        let transaction = req.body.transaction; 
+        transaction = await db.Transaction.findByIdAndUpdate(transaction._id, {
+            postDate: transaction.postDate, 
+            description: transaction.description, 
+            amount: transaction.amount, 
+            category: transaction.category 
+        })
+        await transaction.save()
+        let transactions = await db.Transaction.find({owner: res.locals.user.id}).populate('category');
+        console.log(transactions)
+        res.json({
+            transactions: transactions
+        })
+    } catch (err) {
+        console.warn(err)
+        // handle validation errors
+        if (err.name === 'ValidationError') {
+            res.status(400).json({ msg: err.message })
+        } else {
+            // handle all other errors
+            res.status(500).json({ msg: 'server error 500 😡' })
+        }
         res.status(500).json(err)
     }
 })
