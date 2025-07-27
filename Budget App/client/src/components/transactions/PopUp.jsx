@@ -12,15 +12,15 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '70%',
-  height: '500px', 
+  width: '600px',
+  height: '400px', 
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
 
-export default function PopUp ({open, onClose, txn, date}) { 
+export default function PopUp ({open, onClose, txn, date, setTxns, setPopUp}) { 
     return (
         <Modal 
             open={open} 
@@ -28,7 +28,7 @@ export default function PopUp ({open, onClose, txn, date}) {
             aria-labelledby="child-modal-title"
             aria-describedby="child-modal-description"
         > 
-            <PopUpBox sx={style} txn={txn} date={date}/>
+            <PopUpBox sx={style} txn={txn} date={date} setTxns={setTxns} setPopUp = {setPopUp}/>
         </Modal>
     )
 }

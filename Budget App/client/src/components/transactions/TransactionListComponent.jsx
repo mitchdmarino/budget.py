@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Category from "../categories/Category";
 import CategorySelect from "../categories/CategorySelect";
 import { categorizeTransaction } from "../../api/api";
 import PopUp from "./PopUp";
 
-export default function TransactionListComponent({transaction}) {
-    const [category, setCategory] = useState(transaction.category); 
+export default function TransactionListComponent({transaction, setTxns}) {
+    //const [category, setCategory] = useState(transaction.category); 
     const [popUp, setPopUp] = useState(false); 
-
     //var desc = transaction.description || "";
     //var amount = transaction.amount || 0;  
     var date = transaction.txnDate;
@@ -17,7 +16,7 @@ export default function TransactionListComponent({transaction}) {
     const setNewCategory = async (category) => {
         console.log("Setting the new category")
         console.log(category)
-        setCategory(category)
+    //    setCategory(category)
         await categorizeTransaction(localStorage, transaction, category)
     }
 
@@ -34,10 +33,10 @@ export default function TransactionListComponent({transaction}) {
                 <div className="transaction-date">{date}</div>
                 <div className="transaction-description">{transaction.description}</div>
                 <div className="transaction-amount">${transaction.amount}</div>
-                <div className="transaction-category">
-                    {category ? <Category category={category} setNewCategory={setNewCategory}/> : <CategorySelect category={category} setNewCategory={setNewCategory}/>}</div>
+                {/*<div className="transaction-category">
+                    {category ? <Category category={category} setNewCategory={setNewCategory}/> : <CategorySelect category={category} setNewCategory={setNewCategory}/>}</div>*/}
                 </div>
-            <PopUp open={popUp} onClose={handleClose} txn={transaction} date={date}/> 
+            <PopUp open={popUp} onClose={handleClose} txn={transaction} date={date} setTxns={setTxns} setPopUp={setPopUp}/> 
         </div>
     )
 }

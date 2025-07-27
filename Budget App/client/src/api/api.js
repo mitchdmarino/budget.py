@@ -20,6 +20,18 @@ export async function getTransactions(localStorage) {
     const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api-v1/spending`, options);
     return response;
 }
+
+// update a transaction 
+export async function updateTransaction(localStorage, transaction) {
+    const options = setAuthTokenHeader(localStorage); 
+    console.log(transaction._id)
+    const reqData = {
+        transaction: transaction,
+    }
+    const response = await axios.put(`${process.env.REACT_APP_SERVER_URL}/api-v1/spending`, reqData, options); 
+    return response; 
+}
+
 // assign category to transaction
 export async function categorizeTransaction(localStorage, transaction, category) {
     const options = setAuthTokenHeader(localStorage);

@@ -9,12 +9,8 @@ import TransactionList from './TransactionList';
 export default function Transactions({currentUser}) {
     // state for the secret message (aka user privileged data )
     const [txns, setTxns] = useState([])
-    const [i, setI] = useState(0);
+    const [updateTrue, setUpdateTrue] = useState(false); 
     const [categories, setCategories] = useState([])
-    
-    const nextTransaction = () => {
-        setI(i+1)
-    }
 
     // useEffect for getting the user data and checking auth 
     useEffect(() => {
@@ -37,22 +33,25 @@ export default function Transactions({currentUser}) {
             }
         }
         getTxns()
-    }, [])
+    }, [updateTrue], () => {
+        console.log("WE ARE UNMOUNTING TRANSACTIONS?")
+    })
     
     if (!txns || txns.length === 0) {
         return (<div>no transactions</div>)
     }
-
+    const handleNull = () => {
+        setTxns(null)
+    }
     return (
 
         <div>
            {/*<Transaction currentUser={currentUser} transaction={txns[i]}/> 
 
-            <button onClick={nextTransaction}>Next</button>
+            <button onClick={setTxns(null)}>Next</button>
             */}
             
-            <TransactionList transactions={txns}/> 
-
+            <TransactionList transactions={txns} setTxns={setTxns} setUpdateTrue={setUpdateTrue}/> 
         </div>
     )
 }

@@ -10,7 +10,7 @@ let dateRef = new Date(year, month, 1); // initial date filter
 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-export default function TransactionList({transactions}) {
+export default function TransactionList({transactions, setTxns}) {
     const [page, setPage] = useState(1);
     const [currentTransactions, setCurrentTransactions] = useState([]);
     const [dateFilter, setDateFilter] = useState(dateRef);
@@ -31,10 +31,10 @@ export default function TransactionList({transactions}) {
         let end = itemsPerPage * page;
         let start = end - itemsPerPage;
         setCurrentTransactions(transactions.slice(start, end));
-    }, [page, dateFilter])
+    }, [page, dateFilter, transactions])
     let transactionMap = currentTransactions.map(transaction => {
         return (
-            <TransactionListComponent key={transaction._id} transaction={transaction} />
+            <TransactionListComponent key={transaction._id} transaction={transaction} setTxns={setTxns}/>
         )
     })
     
