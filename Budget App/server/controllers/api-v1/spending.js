@@ -14,7 +14,7 @@ router.get('/', authLockedRoute, async (req, res) => {
         console.log("getting txns"); 
         const user = res.locals.user;
         let transactions = await db.Transaction.find({owner: user.id}).populate('category');
-        res.json({
+        res.status(200).json({
             transactions: transactions
         })
     } catch (err) {
@@ -33,8 +33,8 @@ router.post('/', authLockedRoute, async (req, res) => {
         newTransaction.save();
         console.log("new txn: " + newTransaction); 
         let transactions = await db.Transaction.find({owner: res.locals.user.id}).populate('category');
-        console.log(transactions)
-        res.json({
+        //console.log(transactions)
+        res.status(201).json({
             transactions: transactions, 
             newTransaction: newTransaction
         })
@@ -56,8 +56,31 @@ router.put('/', authLockedRoute, async (req, res) => {
         })
         await transaction.save()
         let transactions = await db.Transaction.find({owner: res.locals.user.id}).populate('category');
-        console.log(transactions)
-        res.json({
+        //console.log(transactions)
+        res.status(200).json({
+            transactions: transactions
+        })
+    } catch (err) {
+        console.warn(err)
+        // handle validation errors
+        if (err.name === 'ValidationError') {
+            res.status(400).json({ msg: err.message })
+        } else {
+            // handle all other errors
+            res.status(500).json({ msg: 'server error 500 😡' })
+        }
+        res.status(500).json(err)
+    }
+})
+
+// delete a transaction 
+router.delete('/:transaction_id', authLockedRoute, async (req, res) => {
+    try {
+        transaction = await db.Transaction.findByIdAndDelete(req.params.transaction_id); 
+        console.log(transaction); 
+        let transactions = await db.Transaction.find({owner: res.locals.user.id}).populate('category');
+        //console.log(transactions)
+        res.status(200).json({
             transactions: transactions
         })
     } catch (err) {

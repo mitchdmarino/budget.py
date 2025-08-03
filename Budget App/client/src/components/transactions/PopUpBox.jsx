@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Box from "@mui/material/Box"
-import { createTransaction, updateTransaction } from "../../api/api";
+import { createTransaction, deleteTransaction, updateTransaction } from "../../api/api";
 import { useEffect } from "react";
 
 export default function PopUpBox ({sx, txn, date, setTxns, setPopUp}) {
@@ -85,6 +85,17 @@ export default function PopUpBox ({sx, txn, date, setTxns, setPopUp}) {
            
         }
     }
+
+    const handleDeleteTransaction = async () => {
+        const deleteTxn = async () => {
+            let response = await deleteTransaction(localStorage, transactionUpdate); 
+            console.log(response)
+            setTxns(response.data.transactions); 
+        }
+        await deleteTxn(); 
+        setPopUp(false); 
+    }
+
     return (
         editMode ? (
             <Box sx={sx} className="edit-mode">
@@ -100,6 +111,7 @@ export default function PopUpBox ({sx, txn, date, setTxns, setPopUp}) {
                 <div className="transaction-description transaction-detail">{txn.description}</div>
                 <div className="transaction-amount transaction-detail">${txn.amount}</div>
                 <button onClick={handleEditButtonClick}>EDIT</button>
+                <button onClick={handleDeleteTransaction}>DELETE</button> 
             </Box>
         )
     )

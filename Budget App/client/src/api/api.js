@@ -57,6 +57,12 @@ export async function categorizeTransaction(localStorage, transaction, category)
     return response;
 }
 
+export async function deleteTransaction(localStorage, transaction) {
+    const options = setAuthTokenHeader(localStorage); 
+    const response = await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api-v1/spending/${transaction._id}`, options); 
+    return response; 
+}
+
 // CATEGORIES API -------------------------------------------------------------------------------------------------------->
 // get categories 
 export async function getCategories(localStorage) {
@@ -76,6 +82,7 @@ export async function createCategory(localStorage, categoryName) {
 
 function setAuthTokenHeader(localStorage) {
     const token = localStorage.getItem('jwt')
+    //console.log(token)
     // make the auth headers 
     const options = {
         headers: {
