@@ -63,6 +63,14 @@ export async function deleteTransaction(localStorage, transaction) {
     return response; 
 }
 
+export async function uploadBankStatement(localStorage, bankUpload) {
+    const options = setAuthTokenHeader(localStorage, "multipart/form-data"); 
+    const formData = new FormData();
+    formData.append('bankUpload', bankUpload);
+    const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api-v1/spending/bank-upload`, formData, options); 
+    return response; 
+}
+
 // CATEGORIES API -------------------------------------------------------------------------------------------------------->
 // get categories 
 export async function getCategories(localStorage) {
@@ -80,13 +88,20 @@ export async function createCategory(localStorage, categoryName) {
 
 //------------------------------------------------------------------------------------------------------------------------>
 
-function setAuthTokenHeader(localStorage) {
+function setAuthTokenHeader(localStorage, content = null) {
     const token = localStorage.getItem('jwt')
     //console.log(token)
     // make the auth headers 
     const options = {
         headers: {
             'Authorization': token
+        }
+    }
+
+    if (content) {
+        options.headers = {
+            'Authorization': token, 
+            'Content-Type': content
         }
     }
     return options;

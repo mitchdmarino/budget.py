@@ -5,6 +5,7 @@ const multer = require('multer');
 
 const upload = multer({ dest: './uploads/' }); // Save files to 'uploads/' directory
 const csv = require('csv-parser');
+const {spawn} = require('child_process')
 const fs = require('fs');
 const category = require('../../models/category');
 
@@ -18,7 +19,7 @@ router.get('/', authLockedRoute, async (req, res) => {
             transactions: transactions
         })
     } catch (err) {
-        res.status(500).json(err)
+        res.status(500).json(err); 
     }
 })
 
@@ -132,7 +133,7 @@ router.post('/category', authLockedRoute, async (req, res) => {
     }
 })
 
-router.post('/CSV', authLockedRoute, upload.single('chargesCSV'), async (req, res) => {
+router.post('/bank-upload', authLockedRoute, upload.single('bankUpload'), async (req, res) => {
     try {
         var user = res.locals.user;
         if (!user) {
@@ -142,35 +143,52 @@ router.post('/CSV', authLockedRoute, upload.single('chargesCSV'), async (req, re
         if (!file) {
             // error
         }
-        const results = [];
-        function parseCSV(filePath) {
+
+        const pdfPath = file.path; 
+        const csvPath = `${pdfPath}.csv`; 
+
+        // call the conversion to csv python script 
+        const py = spawn('python3', ['./bankToCSV.py', pdfPath, csvPath]); 
+        // Log Python standard output
+        py.stdout.on('data', (data) => {
+            console.log(`Python stdout: ${data.toString()}`);
+        });
+
+        // Log Python standard error
+        py.stderr.on('data', (data) => {
+            console.error(`Python stderr: ${data.toString()}`);
+        });
+
+        py.on('close', (code) => {
+            if (code !== 0) {
+                console.error(`Python script exited with code ${code}`);
+                return res.status(500).send('PDF to CSV conversion failed.');
+            }
+            const results = [];
+            
             console.log('parsingCSV')
-            return new Promise((resolve, reject) => {
-              
-          
-              fs.createReadStream(req.file.path)
+            fs.createReadStream(csvPath)
             .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', () => {
-                console.log('done, returning results')
-                console.log(results.length)
-                resolve(results); // ✅ This makes await work!
-            });
-          })
-        }
-        await parseCSV(req.file.path);
-        for (const result of results) {
-            console.log(result['Post Date'])
-            let newTxn = new db.Transaction({
-                postDate: result['Post Date'], 
-                txnDate: result['Transaction Date'], 
-                description: result.Description, 
-                amount: result.Amount,
-                owner: user.id
+            .on('data', (result) => {
+                console.log(result['Post Date'])
+                let newTxn = {
+                    postDate: result['Post Date'], 
+                    txnDate: result['Transaction Date'], 
+                    description: result.Description, 
+                    amount: result.Amount,
+                    owner: user.id
+                }
+                results.push(newTxn); 
+                console.log("new transaction added to results")
             })
-            await (newTxn.save());
-            console.log("new transaction saved")
-        };
+            .on('end', async () => {
+                await db.Transaction.insertMany(results);
+                fs.unlinkSync(pdfPath);
+                fs.unlinkSync(csvPath);
+                res.status(200).send("Transactions successfully saved!"); 
+            });
+        })
+        
     } catch (err) {
         console.warn(err)
         // handle validation errors

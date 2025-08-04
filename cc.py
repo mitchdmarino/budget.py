@@ -7,9 +7,12 @@ from openpyxl.styles import NamedStyle
 from datetime import datetime
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.table import Table, TableStyleInfo
+import sys
 
 directory_path = './cc_statements_USBANK'
-cc_statements = [f for f in os.listdir(directory_path) if f.endswith('.pdf')]
+#cc_statements = [f for f in os.listdir(directory_path) if f.endswith('.pdf')]
+cc_statement = sys.argv[1]
+output_path = sys.argv[2]
 charges_list = []
 credits_list = []
 
@@ -93,9 +96,12 @@ def parse_files(path):
     print(df_credits)
     credits_list.append(df_credits)
 
-
+'''
 for statement in cc_statements: 
     parse_files(statement)
+'''
+parse_files(cc_statement)
+
 
 # Concatenate all charges and credits DataFrames
 print("################################################################################################")
@@ -106,7 +112,7 @@ all_credits_df = pd.concat(credits_list, ignore_index=True)
 
 # Save to CSV
 all_charges_df.to_csv('./organized_cc_statements/charges.csv', index=False)
-all_credits_df.to_csv('./organized_cc_statements/credits.csv', index=False)
+#all_credits_df.to_csv('./organized_cc_statements/credits.csv', index=False)
 
 print("Charges and credits have been successfully combined and saved to CSV files.")
 

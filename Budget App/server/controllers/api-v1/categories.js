@@ -9,7 +9,7 @@ router.get('/', authLockedRoute, async (req, res) => {
         console.log("getting categories")
         var user = res.locals.user;
         var categories = await db.Category.find({owner: user.id});
-        console.log(categories)
+        //console.log(categories)
         // if the user has no categories, let's create some for them
         if (categories.length === 0) {
             categories = createBaseCategories(user);
