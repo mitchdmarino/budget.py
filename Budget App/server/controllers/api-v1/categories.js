@@ -44,3 +44,42 @@ router.post("/", authLockedRoute, async (req, res) => {
     }
 });
 module.exports = router;
+
+router.put("/:category_id", authLockedRoute, async (req, res) => {
+    try {
+        var user = res.locals.user;
+        var categoryID = req.params.category_id;
+        var category = db.Category.findByIdAndUpdate(categoryID, {
+            name: category.name,
+            color: category.color,
+            owner: user.id,
+        });
+        await category.save();
+        res.status(200).json({
+            category: category,
+        });
+    } catch (err) {
+        console.warn(err);
+        if (err.name === "ValidationError") {
+            res.status(400).json({ msg: err.message });
+        } else {
+            // handle all other errors
+            res.status(500).json({ msg: "server error 500 😡" });
+        }
+        res.status(500).json(err);
+    }
+});
+
+router.delete("/:category_id", authLockedRoute, async (req, res) => {
+    try {
+        let category = await db.Category.findByIdAndDelete(
+            req.params.category_id
+        );
+        res.status(200).json({
+            category: category,
+        });
+    } catch (err) {
+        console.warn(err);
+        res.status(500).json(err);
+    }
+});

@@ -78,7 +78,7 @@ router.put("/", authLockedRoute, async (req, res) => {
 // delete a transaction
 router.delete("/:transaction_id", authLockedRoute, async (req, res) => {
     try {
-        transaction = await db.Transaction.findByIdAndDelete(
+        let transaction = await db.Transaction.findByIdAndDelete(
             req.params.transaction_id
         );
         console.log(transaction);
