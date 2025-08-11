@@ -1,24 +1,27 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const CategorySchema = new mongoose.Schema({
-    name: {
-        type: String, 
-        required: true,
-    }, 
-    color: {
-        type: String, 
-        required: true, 
+const CategorySchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        color: {
+            type: String,
+            required: true,
+        },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+        transactions: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Transaction",
+        },
     },
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }, 
-    transactions: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Transaction"
+    {
+        timestamps: true,
     }
-},{
-    timestamps: true
-})
+);
 
-module.exports = mongoose.model('Category', CategorySchema)
+module.exports = mongoose.model("Category", CategorySchema);
