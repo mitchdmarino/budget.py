@@ -1,8 +1,7 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
-export default function CategorySelect({category, setNewCategory}) {
-    // state for the secret message (aka user privileged data )
+export default function CategorySelect({category, setNewCategory, handleCategoryChange}) {
     const [categories, setCategories] = useState([])
 
     // useEffect for getting the user data and checking auth 
@@ -40,7 +39,7 @@ export default function CategorySelect({category, setNewCategory}) {
 
     let showCategories = categories.map(cat => {
         return (
-            <option value={cat._id} key={cat.id}>{cat.name}</option>
+            <option style={{border: '2px solid ' + cat.color}} value={cat._id} key={cat.id}>{cat.name}</option>
         )
     })
 
@@ -52,10 +51,13 @@ export default function CategorySelect({category, setNewCategory}) {
     return (
 
         <div>
-            <label htmlFor="cats">Choose a category:</label>
-            <select onChange={handleSelection}>
+            {category ? <><label htmlFor="cats"></label>
+            <select id="cats" onChange={handleCategoryChange} value={category._id}>
                 {showCategories}
-            </select>
+            </select></> : <><label htmlFor="cats"></label>
+            <select id="cats" onChange={handleCategoryChange} >
+                {showCategories}
+            </select></>}
         </div>
     )
 }

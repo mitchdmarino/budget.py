@@ -2,6 +2,7 @@ import { useState } from "react";
 import Box from "@mui/material/Box"
 import { createTransaction, deleteTransaction, updateTransaction } from "../../api/api";
 import { useEffect } from "react";
+import CategorySelect from "../categories/CategorySelect";
 
 export default function PopUpBox ({sx, txn, date, setTxns, setPopUp}) {
     const [editMode, setEditMode] =useState (true); 
@@ -52,8 +53,11 @@ export default function PopUpBox ({sx, txn, date, setTxns, setPopUp}) {
             amount: e.target.value, 
         })
     }
-    const handleCategoryChange = () => {
-
+    const handleCategoryChange = (e) => {
+        setTransactionUpdate({
+            ...transactionUpdate, 
+            category: e.target.value, 
+        })
     }
     const handleSubmit = async () => {
         if (existingTxn) {
@@ -102,6 +106,7 @@ export default function PopUpBox ({sx, txn, date, setTxns, setPopUp}) {
                 <input className="transaction-date transaction-detail" type="date" value={transactionUpdate.txnDate} onChange={handleDateChange}/>
                 <input className="transaction-description transaction-detail" type="text" value={transactionUpdate.description} onChange={handleDescriptionChange} /> 
                 <input className="transaction-amount transaction-detail" type="number" value={transactionUpdate.amount} onChange={handleAmountChange} /> 
+                <CategorySelect category={transactionUpdate.category} handleCategoryChange={handleCategoryChange}/>
                 <button onClick={handleEditButtonClick}>BACK</button>
                 <button onClick={handleSubmit}>Submit</button>
             </Box>
@@ -110,6 +115,7 @@ export default function PopUpBox ({sx, txn, date, setTxns, setPopUp}) {
                 <div className="transaction-date transaction-detail">{date}</div>
                 <div className="transaction-description transaction-detail">{txn.description}</div>
                 <div className="transaction-amount transaction-detail">${txn.amount}</div>
+                <div className="transaction-category transaction-detail">{txn.category ? txn.category.name : ""}</div>
                 <button onClick={handleEditButtonClick}>EDIT</button>
                 <button onClick={handleDeleteTransaction}>DELETE</button> 
             </Box>

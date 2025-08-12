@@ -6,12 +6,7 @@ router.get("/", authLockedRoute, async (req, res) => {
     try {
         console.log("getting categories");
         var user = res.locals.user;
-        var categories = await db.Category.find({ owner: user.id });
-        //console.log(categories)
-        // if the user has no categories, let's create some for them
-        if (categories.length === 0) {
-            categories = createBaseCategories(user);
-        }
+        var categories = await user.getCategories();
         res.json({
             categories: categories,
         });
@@ -26,11 +21,15 @@ router.post("/", authLockedRoute, async (req, res) => {
             name: category.name,
             color: category.color,
             owner: user.id,
-            transactions: [],
         });
         await newCategory.save();
         await user.categories.push(newCategory);
         await user.save();
+        var categories = await user.getCategories();
+        res.status(200).json({
+            newCategory: newCategory,
+            categories: categories,
+        });
     } catch (err) {
         console.warn(err);
         // handle validation errors
@@ -48,15 +47,23 @@ module.exports = router;
 router.put("/:category_id", authLockedRoute, async (req, res) => {
     try {
         var user = res.locals.user;
+        var category = req.body.category; // updated info
+        console.log("CATEGORY FROM REQ: " + req.body.category);
         var categoryID = req.params.category_id;
-        var category = db.Category.findByIdAndUpdate(categoryID, {
-            name: category.name,
-            color: category.color,
-            owner: user.id,
-        });
-        await category.save();
+        console.log(category.color);
+        var categoryToUpdate = await db.Category.findByIdAndUpdate(
+            categoryID,
+            {
+                name: category.name,
+                color: category.color,
+            },
+            { new: true }
+        );
+        //if (categoryToUpdate) await categoryToUpdate.save();
+        var categories = await user.getCategories();
         res.status(200).json({
-            category: category,
+            category: categoryToUpdate,
+            categories: categories,
         });
     } catch (err) {
         console.warn(err);
@@ -72,11 +79,14 @@ router.put("/:category_id", authLockedRoute, async (req, res) => {
 
 router.delete("/:category_id", authLockedRoute, async (req, res) => {
     try {
+        const user = res.locals.user;
         let category = await db.Category.findByIdAndDelete(
             req.params.category_id
         );
+        var categories = await user.getCategories();
         res.status(200).json({
             category: category,
+            categories: categories,
         });
     } catch (err) {
         console.warn(err);

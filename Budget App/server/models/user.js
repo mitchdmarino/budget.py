@@ -44,15 +44,22 @@ UserSchema.methods.initializeCategories = async function () {
     return await createBaseCategories(this.id);
 };
 
+UserSchema.methods.getCategories = function () {
+    return mongoose
+        .model("Category")
+        .find({ owner: this.id })
+        .populate("transactions");
+};
+
 module.exports = mongoose.model("User", UserSchema);
 
 async function createBaseCategories(user) {
     try {
-        const cat1 = await createCategory("Grocery", "red", user);
-        const cat2 = await createCategory("Restaurants", "green", user);
-        const cat3 = await createCategory("Entertainment", "purple", user);
-        const cat4 = await createCategory("Fitness", "blue", user);
-        const cat5 = await createCategory("Rent", "black", user);
+        const cat1 = await createCategory("Grocery", "#f52f2f", user);
+        const cat2 = await createCategory("Restaurants", "#32a852", user);
+        const cat3 = await createCategory("Entertainment", "#e82ff5", user);
+        const cat4 = await createCategory("Fitness", "#322ff5", user);
+        const cat5 = await createCategory("Rent", "#ecf711", user);
         return [cat1, cat2, cat3, cat4, cat5];
     } catch (error) {
         console.log(error);
@@ -61,7 +68,7 @@ async function createBaseCategories(user) {
 
 async function createCategory(name, color, user) {
     try {
-        const newCategory = new db.Category({
+        const newCategory = new mongoose.model("Category").create({
             name: name,
             owner: user.id,
             color: color,

@@ -27,6 +27,7 @@ router.get("/", authLockedRoute, async (req, res) => {
 // add a single transaction
 router.post("/", authLockedRoute, async (req, res) => {
     try {
+        let user = res.locals.user;
         console.log("adding a custom transaction");
         let newTransaction = req.body.transaction;
         console.log(newTransaction);
@@ -34,6 +35,7 @@ router.post("/", authLockedRoute, async (req, res) => {
         newTransaction = await db.Transaction.create(newTransaction);
         newTransaction.save();
         console.log("new txn: " + newTransaction);
+        await newTransaction.categorizeFromExistingTxns(user);
         let transactions = await user.getTransactions();
         //console.log(transactions)
         res.status(201).json({
@@ -49,14 +51,21 @@ router.post("/", authLockedRoute, async (req, res) => {
 // update a transaction
 router.put("/", authLockedRoute, async (req, res) => {
     try {
+        let user = res.locals.user;
         let transaction = req.body.transaction;
-        transaction = await db.Transaction.findByIdAndUpdate(transaction._id, {
-            postDate: transaction.postDate,
-            description: transaction.description,
-            amount: transaction.amount,
-            category: transaction.category,
-        });
-        await transaction.save();
+        console.log(transaction.category);
+        transaction = await db.Transaction.findByIdAndUpdate(
+            transaction._id,
+            {
+                postDate: transaction.postDate,
+                description: transaction.description,
+                amount: transaction.amount,
+                category: transaction.category,
+            },
+            { new: true }
+        );
+        //await transaction.save();
+        await transaction.categorizeLikeTxns(user);
         let transactions = await user.getTransactions();
         //console.log(transactions)
         res.status(200).json({
@@ -78,6 +87,7 @@ router.put("/", authLockedRoute, async (req, res) => {
 // delete a transaction
 router.delete("/:transaction_id", authLockedRoute, async (req, res) => {
     try {
+        let user = res.locals.user;
         let transaction = await db.Transaction.findByIdAndDelete(
             req.params.transaction_id
         );
@@ -193,9 +203,13 @@ router.post(
                         console.log("new transaction added to results");
                     })
                     .on("end", async () => {
-                        await db.Transaction.insertMany(results);
+                        let newTxns = await db.Transaction.insertMany(results);
                         fs.unlinkSync(pdfPath);
                         fs.unlinkSync(csvPath);
+                        for (const data of newTxns) {
+                            await data.categorizeFromExistingTxns(user);
+                        }
+
                         let updatedTransactions = await user.getTransactions();
                         res.status(200).json({
                             msg: "Transactions successfully saved!",

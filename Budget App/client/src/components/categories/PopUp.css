@@ -1,0 +1,14 @@
+.category-detail {
+    display: block;
+    text-align: center;   
+    width: 90%; 
+    margin: 20px auto; 
+    font-size: 2rem;
+    padding: 20px;
+}
+
+.edit-mode input {
+    max-width: fit-content;
+    border: 2px solid black; 
+    
+}

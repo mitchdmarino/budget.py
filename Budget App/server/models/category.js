@@ -16,7 +16,7 @@ const CategorySchema = new mongoose.Schema(
         },
         transactions: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Transaction",
+            ref: "Transactions",
         },
     },
     {

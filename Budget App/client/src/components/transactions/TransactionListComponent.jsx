@@ -33,6 +33,7 @@ export default function TransactionListComponent({transaction, setTxns}) {
                 <div className="transaction-date">{date}</div>
                 <div className="transaction-description">{transaction.description}</div>
                 <div className="transaction-amount">${transaction.amount}</div>
+                {transaction.category ? <div className="transaction-category" style={{backgroundColor: transaction.category.color}}>{transaction.category.name}</div>: ""}
                 {/*<div className="transaction-category">
                     {category ? <Category category={category} setNewCategory={setNewCategory}/> : <CategorySelect category={category} setNewCategory={setNewCategory}/>}</div>*/}
                 </div>
