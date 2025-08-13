@@ -1,7 +1,6 @@
-import {useState, useEffect} from 'react'
-import axios from 'axios'
-import Inbox from '../inbox/Inbox';
-import { uploadBankStatement } from '../../api/api';
+import {useState} from 'react'
+import Inbox from '../components/inbox/Inbox';
+import { uploadBankStatement } from '../api/api';
 
 export default function Profile({currentUser, handleLogout}) {
     // state for the secret message (aka user privileged data )

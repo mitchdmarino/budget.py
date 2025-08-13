@@ -1,25 +1,29 @@
 import { useState } from 'react'
 import jwt_decode from 'jwt-decode'
 import { Navigate } from 'react-router-dom'
-import { login } from '../../api/api'
 
-export default function Login({ currentUser, setCurrentUser }) {
+// api 
+import { register } from '../api/api'
+
+export default function Register({ currentUser, setCurrentUser }) {
     // state for the controlled form 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [name, setName] = useState('')
     const [msg, setMsg] = useState('')
 
     const handleSubmit = async e => {
         e.preventDefault()
         try {
             // post form data to the backend
-            const loginData = {
+            const registerData = {
+                name,
                 email, 
                 password
             }
-            const response = await login(loginData)
             // save the token in localstorage
-            const { token } = response.data
+            const response = await register(registerData);
+            const { token } = response.data;
             localStorage.setItem('jwt', token)
             // decode the token 
             const decoded = jwt_decode(token)
@@ -42,9 +46,18 @@ export default function Login({ currentUser, setCurrentUser }) {
 
     return (
         <div>
-            <h1>Login</h1>
+            <h1>Register</h1>
             <p> {msg}</p>
             <form onSubmit={handleSubmit}>
+                <label htmlFor='name'>name</label>
+                <input 
+                    type='text'
+                    name='name'
+                    id='name'
+                    value={name}
+                    placeholder='example@domain.com'
+                    onChange={(e) => setName(e.target.value)}
+                />
                 <label htmlFor='email'>email</label>
                 <input 
                     type='text'
@@ -63,8 +76,7 @@ export default function Login({ currentUser, setCurrentUser }) {
                     placeholder='********'
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button type='submit'>Login</button>
-               
+                <button type='submit'>Register</button>
             </form>
         </div>
     )
