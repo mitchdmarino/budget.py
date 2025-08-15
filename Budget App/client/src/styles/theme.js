@@ -2,11 +2,14 @@ const theme = {
     colors: {
         primary: "#00897B", // CTA buttons, highlights
         primaryDark: "#00544cff", // Hover states
-        secondary: "#FF6F61", // Accent color for highlights/icons
+        secondary: "#FFD66B", // Accent color for highlights/icons
         background: "#F9FAFB", // Page background
         text: "#1E293B", // Default text
         textLight: "#648783ff", // Subheadings / muted text
         white: "#FFFFFF",
+        inputBackground: "#F9FAFB",
+        border: "#00544cff",
+        placeholder: "#648783ff",
     },
     fonts: {
         heading: "'Poppins', sans-serif",
