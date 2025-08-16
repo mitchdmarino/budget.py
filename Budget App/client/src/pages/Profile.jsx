@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Inbox from "../components/inbox/Inbox";
-import { uploadBankStatement } from "../api/api";
 import styled from "styled-components";
 
 const ProfileWrapper = styled.div`
