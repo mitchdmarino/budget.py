@@ -11,6 +11,7 @@ import {
     PageSelection,
     MonthYearInput,
 } from "./Transactions.styled";
+import UploadTransactionsForm from "./UploadTransactionsForm";
 
 // set the initial month and year filter
 const today = new Date();
@@ -21,6 +22,7 @@ let dateRef = new Date(year, month, 1); // initial date filter
 export default function TransactionList({ transactions, setTxns }) {
     const [page, setPage] = useState(1);
     const [currentTransactions, setCurrentTransactions] = useState([]);
+    const [thisMonthsTransactions, setThisMonthsTransactions] = useState([]);
     const [dateFilter, setDateFilter] = useState(dateRef);
     const [popUp, setPopUp] = useState(false); // new txn popup
 
@@ -46,6 +48,8 @@ export default function TransactionList({ transactions, setTxns }) {
                 new Date(thisDate).getTime() < new Date(dateFilterEnd).getTime()
             ); // don't include end date
         });
+        setThisMonthsTransactions(transactions); // used for monthly statistics
+        // now cut down the list (25 per page)
         const itemsPerPage = 25;
         let end = itemsPerPage * page;
         let start = end - itemsPerPage;
@@ -124,6 +128,7 @@ export default function TransactionList({ transactions, setTxns }) {
                 <button onClick={handleNextDate}>{">"}</button>
             </DateSelection>
             <NewTransactionContainer>
+                <UploadTransactionsForm setTransactions={setTxns} />
                 <button onClick={handleNewTxnOpen}>
                     Add custom transaction
                 </button>

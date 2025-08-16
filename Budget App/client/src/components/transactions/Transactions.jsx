@@ -5,7 +5,6 @@ import { getTransactions } from "../../api/api";
 import TransactionList from "./TransactionList";
 
 export default function Transactions() {
-    // state for the secret message (aka user privileged data )
     const [txns, setTxns] = useState([]);
     const [updateTrue, setUpdateTrue] = useState(false);
 
@@ -31,7 +30,7 @@ export default function Transactions() {
             };
             getTxns();
         },
-        [updateTrue],
+        [],
         () => {
             console.log("WE ARE UNMOUNTING TRANSACTIONS");
         }
@@ -41,11 +40,5 @@ export default function Transactions() {
         return <div>Upload your Credit Card Statement to get started.</div>;
     }
 
-    return (
-        <TransactionList
-            transactions={txns}
-            setTxns={setTxns}
-            setUpdateTrue={setUpdateTrue}
-        />
-    );
+    return <TransactionList transactions={txns} setTxns={setTxns} />;
 }

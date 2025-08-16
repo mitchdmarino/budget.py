@@ -68,7 +68,7 @@ export const NewTransactionContainer = styled.div`
     margin-bottom: 1rem;
 
     button {
-        background: ${({ theme }) => theme.colors.accent};
+        background: ${({ theme }) => theme.colors.primary};
         border: none;
         color: #fff;
         padding: 0.5rem 1rem;
@@ -76,9 +76,10 @@ export const NewTransactionContainer = styled.div`
         cursor: pointer;
         font-weight: 500;
         transition: background 0.2s ease;
+        margin: 2px;
 
         &:hover {
-            background: ${({ theme }) => theme.colors.accentDark};
+            background: ${({ theme }) => theme.colors.primaryDark};
         }
     }
 `;
