@@ -12,6 +12,7 @@ import {
     MonthYearInput,
 } from "./Transactions.styled";
 import UploadTransactionsForm from "./UploadTransactionsForm";
+import MonthlyInsights from "./MonthlyInsights";
 
 // set the initial month and year filter
 const today = new Date();
@@ -19,7 +20,7 @@ let month = today.getMonth();
 let year = today.getFullYear();
 let dateRef = new Date(year, month, 1); // initial date filter
 
-export default function TransactionList({ transactions, setTxns }) {
+export default function TransactionList({ transactions, setTxns, categories }) {
     const [page, setPage] = useState(1);
     const [currentTransactions, setCurrentTransactions] = useState([]);
     const [thisMonthsTransactions, setThisMonthsTransactions] = useState([]);
@@ -34,12 +35,13 @@ export default function TransactionList({ transactions, setTxns }) {
             dateFilter.getMonth() + 1,
             1
         );
-        console.log(dateFilterStart, dateFilterEnd);
         // sort them (should move this to server side so we don't have to repeat each useEffect)
+        // eslint-disable-next-line
         transactions = transactions.sort(
             (a, b) => new Date(a.txnDate) - new Date(b.txnDate)
         );
         // only get the transactions in the current month
+        // eslint-disable-next-line
         transactions = transactions.filter((transaction) => {
             let thisDate = transaction.txnDate;
             return (
@@ -70,17 +72,19 @@ export default function TransactionList({ transactions, setTxns }) {
         setDateFilter(
             new Date(dateFilter.getFullYear(), dateFilter.getMonth() + 1, 1)
         );
+        setPage(1);
     };
     const handlePrevDate = () => {
         // goes to the previous month
         setDateFilter(
             new Date(dateFilter.getFullYear(), dateFilter.getMonth() - 1, 1)
         );
+        setPage(1);
     };
     const handleNextPage = () => {
         // if multiple pages (25+ txns, goes to next page)
         // only if there is another page
-        if (currentTransactions.length == 25) setPage(page + 1);
+        if (currentTransactions.length === 25) setPage(page + 1);
     };
     const handlePrevPage = () => {
         // if multiple pages (25+ txns, goes to the previous page)
@@ -127,6 +131,11 @@ export default function TransactionList({ transactions, setTxns }) {
                 />
                 <button onClick={handleNextDate}>{">"}</button>
             </DateSelection>
+            <MonthlyInsights
+                transactions={thisMonthsTransactions}
+                date={dateFilter}
+                categories={categories}
+            />
             <NewTransactionContainer>
                 <UploadTransactionsForm setTransactions={setTxns} />
                 <button onClick={handleNewTxnOpen}>

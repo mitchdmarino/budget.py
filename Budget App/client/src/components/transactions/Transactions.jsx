@@ -1,23 +1,28 @@
 import { useState, useEffect } from "react";
-import styled from "styled-components";
 // api
-import { getTransactions } from "../../api/api";
+import { getTransactions, getCategories } from "../../api/api";
 import TransactionList from "./TransactionList";
+import UploadTransactionsForm from "./UploadTransactionsForm";
 
 export default function Transactions() {
     const [txns, setTxns] = useState([]);
-    const [updateTrue, setUpdateTrue] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     // useEffect for getting the user data and checking auth
     useEffect(
         () => {
-            const getTxns = async () => {
+            const fetchData = async () => {
                 try {
                     const TransactionsResponse = await getTransactions(
                         localStorage
                     );
+                    const CategoriesResponse = await getCategories(
+                        localStorage
+                    );
                     let myTransactions = TransactionsResponse.data.transactions;
                     setTxns(myTransactions);
+                    let myCategories = CategoriesResponse.data.categories;
+                    setCategories(myCategories);
                 } catch (err) {
                     // if the error is 401, the auth failed
                     console.warn(err);
@@ -28,7 +33,7 @@ export default function Transactions() {
                     }
                 }
             };
-            getTxns();
+            fetchData();
         },
         [],
         () => {
@@ -37,8 +42,18 @@ export default function Transactions() {
     );
 
     if (!txns || txns.length === 0) {
-        return <div>Upload your Credit Card Statement to get started.</div>;
+        return (
+            <div>
+                <UploadTransactionsForm setTxns={setTxns} />
+            </div>
+        );
     }
 
-    return <TransactionList transactions={txns} setTxns={setTxns} />;
+    return (
+        <TransactionList
+            transactions={txns}
+            setTxns={setTxns}
+            categories={categories}
+        />
+    );
 }
