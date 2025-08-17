@@ -7,7 +7,7 @@ import { ModalBox, Button } from "./PopUp.styled";
 
 const FileUploadWrapper = styled.div``;
 
-export default function UploadTransactionsForm(setTransactions) {
+export default function UploadTransactionsForm({ setTxns }) {
     const [bankUpload, setBankUpload] = useState(null);
     const [open, setOpen] = useState(false);
 
@@ -15,14 +15,19 @@ export default function UploadTransactionsForm(setTransactions) {
         setBankUpload(e.target.files[0]);
     };
     const handleUpload = async () => {
-        if (!bankUpload) return;
+        if (!bankUpload) return setOpen(false);
         try {
             const response = await uploadBankStatement(
                 localStorage,
                 bankUpload
             );
-            setTransactions(response.data.transactions);
-        } catch (err) {}
+            console.log(response);
+            setTxns(response.data.transactions);
+            setOpen(false);
+            console.log("HELP");
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const onClose = () => {

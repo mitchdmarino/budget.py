@@ -137,7 +137,7 @@ export default function TransactionList({ transactions, setTxns, categories }) {
                 categories={categories}
             />
             <NewTransactionContainer>
-                <UploadTransactionsForm setTransactions={setTxns} />
+                <UploadTransactionsForm setTxns={setTxns} />
                 <button onClick={handleNewTxnOpen}>
                     Add custom transaction
                 </button>

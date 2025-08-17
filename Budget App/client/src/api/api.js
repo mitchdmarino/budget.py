@@ -27,6 +27,7 @@ export async function getTransactions(localStorage) {
         `${process.env.REACT_APP_SERVER_URL}/api-v1/spending`,
         options
     );
+    console.log(response.data.transactions.length);
     return response;
 }
 
@@ -92,15 +93,17 @@ export async function deleteTransaction(localStorage, transaction) {
 }
 
 export async function uploadBankStatement(localStorage, bankUpload) {
-    const options = setAuthTokenHeader(localStorage, "multipart/form-data");
-    const formData = new FormData();
-    formData.append("bankUpload", bankUpload);
-    const response = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/api-v1/spending/bank-upload`,
-        formData,
-        options
-    );
-    return response;
+    if (bankUpload) {
+        const options = setAuthTokenHeader(localStorage, "multipart/form-data");
+        const formData = new FormData();
+        formData.append("bankUpload", bankUpload);
+        const response = await axios.post(
+            `${process.env.REACT_APP_SERVER_URL}/api-v1/spending/bank-upload`,
+            formData,
+            options
+        );
+        return response;
+    }
 }
 
 // CATEGORIES API -------------------------------------------------------------------------------------------------------->

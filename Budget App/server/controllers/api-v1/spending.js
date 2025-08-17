@@ -7,7 +7,6 @@ const upload = multer({ dest: "./uploads/" }); // Save files to 'uploads/' direc
 const csv = require("csv-parser");
 const { spawn } = require("child_process");
 const fs = require("fs");
-const category = require("../../models/category");
 
 // show all spending transactions
 router.get("/", authLockedRoute, async (req, res) => {
@@ -35,7 +34,7 @@ router.post("/", authLockedRoute, async (req, res) => {
         newTransaction = await db.Transaction.create(newTransaction);
         newTransaction.save();
         console.log("new txn: " + newTransaction);
-        await newTransaction.categorizeFromExistingTxns(user);
+        //await newTransaction.categorizeFromExistingTxns(user);
         let transactions = await user.getTransactions();
         //console.log(transactions)
         res.status(201).json({
@@ -51,9 +50,12 @@ router.post("/", authLockedRoute, async (req, res) => {
 // update a transaction
 router.put("/", authLockedRoute, async (req, res) => {
     try {
+        console.log("updating my transaction");
         let user = res.locals.user;
         let transaction = req.body.transaction;
+        console.log(transaction);
         console.log(transaction.category);
+        if (transaction.category === "") transaction.category = null;
         transaction = await db.Transaction.findByIdAndUpdate(
             transaction._id,
             {
@@ -65,7 +67,7 @@ router.put("/", authLockedRoute, async (req, res) => {
             { new: true }
         );
         //await transaction.save();
-        await transaction.categorizeLikeTxns(user);
+        //if (transaction.category) await transaction.categorizeLikeTxns(user);
         let transactions = await user.getTransactions();
         //console.log(transactions)
         res.status(200).json({
@@ -110,6 +112,7 @@ router.delete("/:transaction_id", authLockedRoute, async (req, res) => {
     }
 });
 
+/*
 // Categorize a transaction
 router.post("/category", authLockedRoute, async (req, res) => {
     try {
@@ -147,6 +150,7 @@ router.post("/category", authLockedRoute, async (req, res) => {
         res.status(500).json(err);
     }
 });
+*/
 
 router.post(
     "/bank-upload",
@@ -203,11 +207,11 @@ router.post(
                         console.log("new transaction added to results");
                     })
                     .on("end", async () => {
-                        let newTxns = await db.Transaction.insertMany(results);
                         fs.unlinkSync(pdfPath);
                         fs.unlinkSync(csvPath);
-                        for (const data of newTxns) {
-                            await data.categorizeFromExistingTxns(user);
+                        for (const txnData of results) {
+                            const txn = new db.Transaction(txnData);
+                            await txn.save(); // triggers pre("save") hooks
                         }
 
                         let updatedTransactions = await user.getTransactions();
