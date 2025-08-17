@@ -18,3 +18,11 @@ npm start
 
 ```
 
+to run python scripts: 
+```zsh 
+source venv/bin/activate
+pip install -r requirements.txt
+python cc.py
+python pay.py
+```
+
