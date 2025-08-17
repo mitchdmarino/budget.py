@@ -10,6 +10,7 @@ const theme = {
         inputBackground: "#F9FAFB",
         border: "#00544cff",
         placeholder: "#648783ff",
+        backgroundDarker: "#dadbddff",
     },
     fonts: {
         heading: "'Poppins', sans-serif",

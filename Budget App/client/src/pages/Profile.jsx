@@ -3,9 +3,12 @@ import Inbox from "../components/inbox/Inbox";
 import styled from "styled-components";
 
 const ProfileWrapper = styled.div`
-    max-width: 800px;
+    max-width: 1500px;
     margin: 2rem auto;
-    padding: 2rem;
+    padding: 5rem;
+    background: ${({ theme }) => theme.colors.background};
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
 `;
 
 export const Avatar = styled.div`

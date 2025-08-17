@@ -19,6 +19,38 @@ import jwt_decode from "jwt-decode";
 //import "./App.css";
 import Transactions from "./components/transactions/Transactions";
 import MyCategories from "./components/categories/MyCategories";
+import styled from "styled-components";
+
+export const AppWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.text};
+    font-family: "Inter", "Roboto", sans-serif;
+    padding: 1rem;
+
+    // optional: center main content
+    main {
+        flex: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    a {
+        color: ${({ theme }) => theme.colors.primary};
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    button {
+        cursor: pointer;
+        font-family: inherit;
+    }
+`;
 
 function App() {
     // the currently logged in user will be stored in state
@@ -57,70 +89,72 @@ function App() {
                         handleLogout={handleLogout}
                     />
                 </header>
-                <main>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <Welcome
-                                    currentUser={currentUser}
-                                    setCurrentUser={setCurrentUser}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/register"
-                            element={
-                                <Register
-                                    currentUser={currentUser}
-                                    setCurrentUser={setCurrentUser}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/login"
-                            element={
-                                <Login
-                                    currentUser={currentUser}
-                                    setCurrentUser={setCurrentUser}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/txns"
-                            element={
-                                <Transactions
-                                    currentUser={currentUser}
-                                    setCurrentUser={setCurrentUser}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/categories"
-                            element={
-                                <MyCategories
-                                    currentUser={currentUser}
-                                    setCurrentUser={setCurrentUser}
-                                />
-                            }
-                        />
-                        {/* TODO: conditionally render auth locked routes */}
-                        <Route
-                            path="/profile"
-                            element={
-                                currentUser ? (
-                                    <Profile
+                <AppWrapper>
+                    <main>
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={
+                                    <Welcome
                                         currentUser={currentUser}
-                                        handleLogout={handleLogout}
                                         setCurrentUser={setCurrentUser}
                                     />
-                                ) : (
-                                    <Navigate to="/login" />
-                                )
-                            }
-                        />
-                    </Routes>
-                </main>
+                                }
+                            />
+                            <Route
+                                path="/register"
+                                element={
+                                    <Register
+                                        currentUser={currentUser}
+                                        setCurrentUser={setCurrentUser}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/login"
+                                element={
+                                    <Login
+                                        currentUser={currentUser}
+                                        setCurrentUser={setCurrentUser}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/txns"
+                                element={
+                                    <Transactions
+                                        currentUser={currentUser}
+                                        setCurrentUser={setCurrentUser}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/categories"
+                                element={
+                                    <MyCategories
+                                        currentUser={currentUser}
+                                        setCurrentUser={setCurrentUser}
+                                    />
+                                }
+                            />
+                            {/* TODO: conditionally render auth locked routes */}
+                            <Route
+                                path="/profile"
+                                element={
+                                    currentUser ? (
+                                        <Profile
+                                            currentUser={currentUser}
+                                            handleLogout={handleLogout}
+                                            setCurrentUser={setCurrentUser}
+                                        />
+                                    ) : (
+                                        <Navigate to="/login" />
+                                    )
+                                }
+                            />
+                        </Routes>
+                    </main>
+                </AppWrapper>
             </Router>
         </ThemeProvider>
     );

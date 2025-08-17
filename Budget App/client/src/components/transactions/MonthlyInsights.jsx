@@ -7,8 +7,18 @@ import { BarChart } from "@mui/x-charts/BarChart";
 
 const InsightsWrapper = styled.div`
     background: ${({ theme }) => theme.colors.background};
-    border: 1px solid ${({ theme }) => theme.colors.border};
-    border-radius: 8px;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    h1 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    .bar-chart-container {
+        overflow-x: auto;
+    }
 `;
 
 export default function MonthlyInsights({ transactions, date, categories }) {
@@ -22,7 +32,6 @@ export default function MonthlyInsights({ transactions, date, categories }) {
     }).format(spending);
 
     // get the month's name from the date ;
-    console.log(date);
     const month = new Date(date).toLocaleString("default", {
         month: "long",
     });
@@ -52,6 +61,7 @@ export default function MonthlyInsights({ transactions, date, categories }) {
                         width={600}
                         barGapRatio={0} // remove gap within bars
                         categoryGapRatio={0.3} // space between rows
+                        className="bar-chart-container"
                     />
                 </>
             )}
