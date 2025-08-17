@@ -120,7 +120,7 @@ export default function PopUpBox({ sx, txn, date, setTxns, setPopUp }) {
     return (
         <ModalBox>
             {" "}
-            {editMode ? (
+            {true ? (
                 <>
                     <TransactionDetail
                         type="date"
@@ -142,8 +142,13 @@ export default function PopUpBox({ sx, txn, date, setTxns, setPopUp }) {
                         handleCategoryChange={handleCategoryChange}
                     />
                     <ButtonRow>
-                        <Button onClick={handleEditButtonClick}>Back</Button>
+                        {/*<Button onClick={handleEditButtonClick}>Back</Button>*/}
                         <Button onClick={handleSubmit}>Submit</Button>
+                        {existingTxn && (
+                            <DeleteButton onClick={handleDeleteTransaction}>
+                                Delete
+                            </DeleteButton>
+                        )}
                     </ButtonRow>
                 </>
             ) : (
@@ -158,9 +163,11 @@ export default function PopUpBox({ sx, txn, date, setTxns, setPopUp }) {
                     </TransactionDetailRead>
                     <ButtonRow>
                         <Button onClick={handleEditButtonClick}>Edit</Button>
-                        <DeleteButton onClick={handleDeleteTransaction}>
-                            Delete
-                        </DeleteButton>
+                        {existingTxn && (
+                            <DeleteButton onClick={handleDeleteTransaction}>
+                                Delete
+                            </DeleteButton>
+                        )}
                     </ButtonRow>
                 </>
             )}
