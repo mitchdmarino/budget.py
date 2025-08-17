@@ -1,10 +1,20 @@
-This is my automatic budget generator. Just add new CC and pay statements to get an acitve view of my budget 
+# Budget Vision 
+## Sharper Insight, Smarter Spending
 
-<h3>To run, set up a python venv and run the script</h3>
-<div style="border: 2px solid black">
-    <p>source venv/bin/activate</p>
-    <p>pip install -r requirements.txt</p>
-    <p>python cc.py</p>
-    <p>python pay.py</p>
+### Welcome to Budget Vision, an app that automatically tracks your money flow and gives valuable insights to spending habits. 
 
-</div>
+<h3>To run: </h3>
+
+```zsh
+
+gh repo clone mitchdmarino/budget.py
+cd Budget_Vision/client
+npm i 
+npm start 
+cd .. 
+cd server
+npm i 
+npm start 
+
+```
+
