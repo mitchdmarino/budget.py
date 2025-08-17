@@ -2,7 +2,6 @@ const router = require("express").Router();
 const db = require("../../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const authLockedRoute = require("./authLockedRoute");
 
 // POST /users/register -- CREATE a new user
 router.post("/register", async (req, res) => {
@@ -28,7 +27,6 @@ router.post("/register", async (req, res) => {
             password: hashedPassword,
         });
         await newUser.save();
-        let categories = await newUser.initializeCategories();
         // sign the user in
         // create the jwt payload
         const payload = {

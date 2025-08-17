@@ -41,7 +41,7 @@ UserSchema.methods.getTransactions = function () {
 run when a user creates an account so we have some categories for them to use. They can edit/ delete these if they want to 
 */
 UserSchema.methods.initializeCategories = async function () {
-    return await createBaseCategories(this.id);
+    return await createBaseCategories(this);
 };
 
 UserSchema.methods.getCategories = function () {
@@ -51,7 +51,13 @@ UserSchema.methods.getCategories = function () {
         .populate("transactions");
 };
 
-module.exports = mongoose.model("User", UserSchema);
+// create base categories
+UserSchema.pre("save", async function (next) {
+    if (this.isNew) {
+        await createBaseCategories(this);
+    }
+    next();
+});
 
 async function createBaseCategories(user) {
     try {
@@ -70,14 +76,15 @@ async function createCategory(name, color, user) {
     try {
         const newCategory = new mongoose.model("Category").create({
             name: name,
-            owner: user.id,
+            owner: user,
             color: color,
         });
-        await newCategory.save();
-        await user.categories.push(newCategory);
-        await user.save();
-        return newCategory();
+        //await newCategory.save();
+        await user.categories.push(newCategory.id);
+        return newCategory;
     } catch (error) {
         console.log(error);
     }
 }
+
+module.exports = mongoose.model("User", UserSchema);
